@@ -35,7 +35,7 @@ public class EventBus {
         dispatcher.dispatch(event, targets);
 
         System.out.println(
-                "✔ Task '" + event.getTaskName()
+                "Task '" + event.getTaskName()
                         + "' [" + event.getPriority()
                         + "] notified " + targets.size() + " users"
         );

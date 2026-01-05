@@ -4,9 +4,6 @@ import com.example.notification.service.event.*;
 import com.example.notification.service.notification.EmailNotificationService;
 import com.example.notification.ui.ConsoleMenu;
 
-/**
- * Application entry point.
- */
 public class NotificationApplication {
 
     public static void main(String[] args) {
