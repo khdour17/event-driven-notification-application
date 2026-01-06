@@ -7,7 +7,6 @@ import com.example.notification.service.notification.NotificationChannel;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 
 public class EventDispatcher {
@@ -27,15 +26,14 @@ public class EventDispatcher {
             );
         }
 
-        waitForCompletion();
+        waitBriefly();
     }
 
-    private void waitForCompletion() {
+    private void waitBriefly() {
         try {
-            executor.awaitTermination(5, TimeUnit.SECONDS);
+            Thread.sleep(300); // short, controlled pause
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
     }
 }

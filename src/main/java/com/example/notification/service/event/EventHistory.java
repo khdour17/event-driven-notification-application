@@ -23,4 +23,8 @@ public class EventHistory {
                 .filter(e -> e.getTimestamp().isAfter(oneHourAgo))
                 .collect(Collectors.toList());
     }
+
+    public List<Event> getAll() {
+        return events;
+    }
 }

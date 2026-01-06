@@ -141,7 +141,12 @@ public class ConsoleMenu {
 
         System.out.println("Starting scheduled tasks...");
         scheduler.startScheduledTasks(interval, repetitions);
-        System.out.println("Scheduled tasks completed.");
+        try {
+            long totalSleepMillis = (long) interval * repetitions * 1000;
+            Thread.sleep(totalSleepMillis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 

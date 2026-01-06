@@ -28,6 +28,11 @@ public class EventBus {
         priorities.forEach(p -> subscriptions.get(p).add(subscription));
     }
 
+    //overloading for the helper class in the testing
+    public void subscribe(TaskPriority priority, Subscription subscription) {
+        subscribe(Collections.singleton(priority), subscription);
+    }
+
     public void publish(NewTaskEvent event) {
         history.add(event);
 
