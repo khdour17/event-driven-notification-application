@@ -31,7 +31,7 @@ public class EventDispatcher {
 
     private void waitBriefly() {
         try {
-            Thread.sleep(300); // short, controlled pause
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
