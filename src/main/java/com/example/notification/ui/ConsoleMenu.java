@@ -62,6 +62,10 @@ public class ConsoleMenu {
         System.out.print("Email: ");
         String email = scanner.nextLine();
 
+        System.out.print("Receive notifications only during work hours? (y/n): ");
+        boolean workHoursOnly =
+                scanner.nextLine().trim().equalsIgnoreCase("y");
+
         System.out.println("Choose priorities (e.g. 1 2 3) or 0 for ALL:");
         System.out.println("1=CRITICAL 2=HIGH 3=MEDIUM 4=LOW");
 
@@ -80,7 +84,7 @@ public class ConsoleMenu {
             }
         }
 
-        eventBus.subscribe(priorities, new Subscription(new User(name, email)));
+        eventBus.subscribe(priorities, new Subscription(new User(name, email,workHoursOnly)));
         System.out.println("User registered successfully for priorities: " + priorities);
     }
 

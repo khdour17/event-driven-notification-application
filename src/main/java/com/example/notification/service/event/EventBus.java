@@ -37,14 +37,15 @@ public class EventBus {
         history.add(event);
 
         List<Subscription> targets = subscriptions.get(event.getPriority());
-        dispatcher.dispatch(event, targets);
+        int notified = dispatcher.dispatch(event, targets);
 
         System.out.println(
                 "Task '" + event.getTaskName()
                         + "' [" + event.getPriority()
-                        + "] notified " + targets.size() + " users"
+                        + "] notified " + notified + " users"
         );
     }
+
 
     public EventHistory getHistory() {
         return history;

@@ -7,40 +7,50 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Fires scheduled task events using a ScheduledExecutorService.
+ */
 public class ScheduledEventService {
 
     private final EventBus eventBus;
-    private final ScheduledExecutorService scheduler =
-            Executors.newSingleThreadScheduledExecutor();
 
     public ScheduledEventService(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
     public void startScheduledTasks(int intervalSeconds, int times) {
+
         System.out.println("Scheduled tasks starting...");
 
-        final int[] counter = {0};
+        ScheduledExecutorService scheduler =
+                Executors.newSingleThreadScheduledExecutor();
 
-        scheduler.scheduleAtFixedRate(() -> {
-            counter[0]++;
+        Runnable task = new Runnable() {
+            private int counter = 0;
 
-            eventBus.publish(
-                    new NewTaskEvent(
-                            "Scheduled Task #" + counter[0],
-                            TaskPriority.MEDIUM
-                    )
-            );
+            @Override
+            public void run() {
+                counter++;
 
-            if (counter[0] >= times) {
-                shutdownScheduler();
+                eventBus.publish(
+                        new NewTaskEvent(
+                                "Scheduled Task #" + counter,
+                                TaskPriority.MEDIUM
+                        )
+                );
+
+                if (counter >= times) {
+                    scheduler.shutdown();
+                    System.out.println("Scheduled tasks completed.");
+                }
             }
+        };
 
-        }, 0, intervalSeconds, TimeUnit.SECONDS);
-    }
-
-    private void shutdownScheduler() {
-        scheduler.shutdown();
-        System.out.println("Scheduled tasks completed.");
+        scheduler.scheduleAtFixedRate(
+                task,
+                0,
+                intervalSeconds,
+                TimeUnit.SECONDS
+        );
     }
 }
