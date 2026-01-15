@@ -2,16 +2,19 @@
 
 ## 📌 Project Overview
 
-This project is a **simple, clean, console-based notification system** built using **Java**. It demonstrates how to design an **event-driven system** using **object-oriented principles**, **design patterns**, and **good software engineering practices**, while keeping the implementation easy to understand and extend.
+This project is a **clean, console-based notification system** built using **Java**, designed to demonstrate a **realistic event-driven architecture** while keeping the code simple, readable, and extensible.
 
-The system allows:
+The system supports:
 
-* Users to subscribe to task notifications based on priority
-* Tasks (events) to be published to subscribers
-* Event history tracking
-* Scheduled (automatic) task generation
-* Console-based interaction
-* Fully covered unit tests with a clean helper-based structure
+- User subscriptions to task notifications by priority
+- Publishing task events
+- Filtering notifications based on **working hours**
+- Event history tracking
+- Scheduled (automatic) task publishing
+- Console-based interaction
+- Comprehensive unit tests (positive & negative cases)
+
+This project focuses on **clarity, correctness, and good software engineering practices**, not over-engineering.
 
 ---
 
@@ -19,32 +22,41 @@ The system allows:
 
 ### 🔹 Programming & Language
 
-* Java (OOP-focused)
-* Java Time API (`LocalDateTime`)
-* Collections Framework
+- Java (OOP-focused)
+- Java Time API (`LocalDateTime`, `LocalTime`)
+- Java Concurrency (`ExecutorService`, `ScheduledExecutorService`)
+- Java Collections Framework
+
+---
 
 ### 🔹 Architectural Style
 
-* **Event-Driven Architecture (EDA)**
+- **Event-Driven Architecture (EDA)**
+
+---
 
 ### 🔹 Design Patterns Applied
 
-| Pattern                                   | Usage                                      |
-| ----------------------------------------- | ------------------------------------------ |
-| **Observer**                              | Subscribers listen for published events    |
-| **Publisher–Subscriber**                  | EventBus manages event distribution        |
-| **Facade (lightweight)**                  | ConsoleMenu hides system complexity        |
-| **Single Responsibility Principle (SRP)** | Each class has one clear purpose           |
-| **Open/Closed Principle (OCP)**           | Easy to add new event types or subscribers |
+| Pattern | Usage |
+|-------|------|
+| **Observer** | Users subscribe to events and get notified |
+| **Publisher–Subscriber** | `EventBus` manages subscriptions and publishing |
+| **Strategy (Policy)** | `WorkHoursPolicy` controls notification rules |
+| **Facade (lightweight)** | `ConsoleMenu` hides internal system complexity |
+| **Single Responsibility Principle (SRP)** | Each class has one clear purpose |
+| **Open/Closed Principle (OCP)** | Easy to add new events, rules, or channels |
+
+---
 
 ### 🔹 Software Engineering Practices
 
-* Clear package separation (domain / service / ui)
-* Clean naming conventions
-* No unnecessary over-engineering
-* Readable, maintainable code
-* Unit testing without mocks (real behavior testing)
-* Test helpers for reuse and clarity
+- Clear package separation (`domain`, `service`, `ui`, `util`)
+- Clean naming conventions
+- Simple concurrency (no unnecessary complexity)
+- Immutable domain objects where possible
+- Real behavior unit tests (no mocks)
+- Helper-based test structure for clarity
+- Meaningful test names and descriptions
 
 ---
 
@@ -54,117 +66,148 @@ The system allows:
 com.example.notification
 │
 ├── domain
-│   ├── event
-│   │   ├── Event
-│   │   ├── NewTaskEvent
-│   │   └── TaskPriority
-│   ├── subscription
-│   │   └── Subscription
-│   └── user
-│       └── User
+│      ├── event
+│      │     ├── Event
+│      │     ├── NewTaskEvent
+│      │     └── TaskPriority
+│      ├── subscription
+│      │     └── Subscription
+│      └── user
+│           └── User
 │
 ├── service
-│   ├── event
-│   │   ├── EventBus
-│   │   ├── EventDispatcher
-│   │   └── EventHistory
-│   │
-│   └── notification
-│       ├── NotificationChannel
-│       └── EmailNotificationService
+│      ├── event
+│      │    ├── EventBus
+│      │    ├── EventDispatcher
+│      │    ├── EventHistory
+│      │    └── ScheduledEventService
+│      │
+│      └── notification
+│           ├── NotificationChannel
+│           └── EmailNotificationService
 │
-└── ui
-    └── ConsoleMenu
-
-── test
-    ├── helpers
-    │   ├── EventBusTestHelper
-    │   ├── EventHistoryTestHelper
-    │   └── ScheduledEventServiceTestHelper
-    └── tests
-        ├── EventBusTest
-        ├── EventHistoryTest
-        └── ScheduledEventServiceTest
+├── util
+│    └── WorkHoursPolicy
+│
+├── ui
+│    └── ConsoleMenu
+│
+└── test
+├── helpers
+│    ├── EventBusTestHelper
+│    ├── EventHistoryTestHelper
+│    └── ScheduledEventTestHelper
+└── service
+     ├── EventBusTest
+     ├── EventHistoryTest
+     └── ScheduledEventServiceTest
 ```
 
 ---
 
 ## 🧩 Class-by-Class Description
 
-### 🔸 Domain Layer
+## 🔸 Domain Layer
 
-#### `Event`
-
-* Base abstract representation of a system event
-* Contains timestamp and event type
-
-#### `NewTaskEvent`
-
-* Concrete event representing a newly created task
-* Holds task name and priority
-
-#### `TaskPriority`
-
-* Enum defining task importance levels
-* Used for filtering subscriptions
-
-#### `User`
-
-* Represents a system user
-* Holds user identity data
-
-#### `Subscription`
-
-* Connects a user to the event system
-* Acts as an observer in the Observer pattern
+### `Event`
+- Base abstraction for all system events
+- Holds event timestamp
+- Parent type for future event extensions
 
 ---
 
-### 🔸 Service Layer
-
-#### `EventBus`
-
-* Central event dispatcher (Publisher)
-* Responsibilities:
-
-  * Manage subscriptions
-  * Publish events
-  * Notify subscribers
-  * Store event history
-
-**Pattern:** Observer 
+### `NewTaskEvent`
+- Concrete event representing a newly created task
+- Contains:
+  - Task name
+  - Task priority
 
 ---
 
-#### `EventHistory`
-
-* Stores published events
-* Supports time-based queries (e.g. last hour)
-
----
-
-#### `ScheduledEventService`
-
-* Publishes events at fixed intervals
-* Uses simple blocking logic (`Thread.sleep`)
-* Finite execution (no infinite threads)
-
-**Design Goal:** Simplicity over concurrency complexity
+### `TaskPriority`
+- Enum defining task importance levels:
+  - LOW
+  - MEDIUM
+  - HIGH
+  - CRITICAL
+- Used to filter subscriptions
 
 ---
 
-### 🔸 UI Layer
+### `User`
+- Represents a system user
+- Contains:
+  - Name
+  - Email
+  - `workHoursOnly` preference
+- Determines whether notifications are allowed outside work hours
 
-#### `ConsoleMenu`
+---
 
-* Acts as the system interface (Facade)
-* Allows:
+### `Subscription`
+- Connects a user to the event system
+- Acts as the **Observer** in the Observer pattern
 
-  * User registration
-  * Task creation
-  * Viewing event history
-  * Viewing subscribers
-  * Running scheduled tasks
+---
+
+## 🔸 Service Layer
+
+### `EventBus`
+- Central event publisher
+- Responsibilities:
+  - Manage subscriptions
+  - Publish events
+  - Filter subscribers by priority
+  - Store event history
+
+**Pattern:** Observer / Publisher–Subscriber
+
+---
+
+### `EventDispatcher`
+- Sends notifications to eligible users
+- Uses `ExecutorService` for concurrent dispatch
+- Applies **work-hours filtering**
+- Only notifies users when allowed
+
+---
+
+### `EventHistory`
+- Stores all published events
+- Supports:
+  - Retrieving all events
+  - Retrieving events from the last hour
+- Used for monitoring and auditing
+
+---
+
+### `ScheduledEventService`
+- Publishes events at fixed intervals
+- Uses `ScheduledExecutorService`
+- Finite execution (no infinite background threads)
+- Automatically shuts down after completing tasks
+
+---
+
+## 🔸 Utility Layer
+
+### `WorkHoursPolicy`
+- Centralized business rule for work hours
+- Defines allowed notification time window (09:00–17:00)
+- Keeps time logic out of domain and service classes
+
+---
+
+## 🔸 UI Layer
+
+### `ConsoleMenu`
+- Acts as a **Facade**
+- Provides user-friendly console interaction:
+  - Add users
+  - Create tasks
+  - Subscribe users
+  - View event history
+  - Run scheduled tasks
 
 ---
 
@@ -172,50 +215,42 @@ com.example.notification
 
 ### 🎯 Testing Goals
 
-* Test **real behavior**, not mocked logic
-* Clear, readable tests
-* One meaningful assertion per test
-* Easy to extend
+- Test **real behavior**, not mocked interactions
+- Cover both **positive and negative scenarios**
+- Ensure system stability under edge cases
+- Keep tests readable and maintainable
+
+---
 
 ### 🧩 Test Design Pattern
 
-Inspired by Cypress **spec/helper** structure:
+Inspired by Cypress-style testing:
 
-* **Helper Classes**
+#### Helper Classes
+- Contain all setup and logic
+- Perform real actions
+- Encapsulate assertions
 
-  * Contain all setup and logic
-  * Perform real actions
-
-* **Test Classes**
-
-  * Call one helper method per test
-  * Zero clutter
-  * Clear intention
-
----
-
-### 🧪 Example Test Naming
-
-```java
-@Test
-@DisplayName("Event should be stored when published")
-void shouldStoreEventWhenPublished() {
-    helper.publishEventAndVerifyHistory();
-}
-```
+#### Test Classes
+- One helper call per test
+- Clear intent
+- No duplicated logic
 
 ---
 
-### 📌 What Is Covered by Tests
+### 📌 Covered Test Scenarios
 
-| Component                          | Covered |
-| ---------------------------------- | ------- |
-| Event publishing                   | ✅       |
-| Event history storage              | ✅       |
-| Time-based filtering               | ✅       |
-| Scheduled event execution          | ✅       |
-| Multiple events handling           | ✅       |
-| Edge cases (empty history, limits) | ✅       |
+| Scenario | Covered |
+|--------|--------|
+| Subscribe users to priorities | ✅ |
+| Publish events with subscribers | ✅ |
+| Publish events with no subscribers | ✅ |
+| Work-hours-only user behavior | ✅ |
+| Event history storage | ✅ |
+| Last-hour filtering | ✅ |
+| Scheduled events execution | ✅ |
+| Zero scheduled runs | ✅ |
+| No users / no events cases | ✅ |
 
 ---
 
@@ -223,61 +258,13 @@ void shouldStoreEventWhenPublished() {
 
 ### Run the Application
 
-From IDE:
-
-* Run the `main` method (if present)
-* Or run `ConsoleMenu`
+From your IDE:
+- Run `NotificationApplication` (main class)
+- Or run `ConsoleMenu`
 
 ---
 
 ### Run All Tests
 
-#### Option 1: From IDE (Recommended)
-
-* Right-click:
-
-```
-src/test/java
-```
-
-* Click **Run All Tests**
-
----
-
-#### Option 2: Using Maven
-
-```bash
-mvn test
-```
-
-This will:
-
-* Compile the project
-* Execute all unit tests
-* Fail on any broken test
-
----
-
-## 🚀 Future Extensions
-
-This system is intentionally simple but easily extensible:
-
-* Add new event types
-* Add email / SMS notification services
-* Replace console UI with REST API
-* Add persistence (database)
-* Introduce async scheduling later
-
----
-
-## ✅ Summary
-
-This project demonstrates:
-
-* Clean Java OOP design
-* Event-driven architecture
-* Proper use of design patterns
-* Simple but effective scheduling
-* Professional unit testing strategy
-
-**Designed for learning, clarity, and scalability.**
+#### Option 1: IDE (Recommended)
+- Right-click:
