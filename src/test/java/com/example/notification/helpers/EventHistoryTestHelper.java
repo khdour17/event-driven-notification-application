@@ -6,31 +6,28 @@ import com.example.notification.service.event.EventHistory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 public class EventHistoryTestHelper {
 
-    public static void storeAndRetrieveEvents() {
+    public static void storeEventsCorrectly() {
         EventHistory history = new EventHistory();
 
-        history.add(new NewTaskEvent("Task 1", TaskPriority.LOW));
-        history.add(new NewTaskEvent("Task 2", TaskPriority.HIGH));
+        history.add(new NewTaskEvent("A", TaskPriority.LOW));
+        history.add(new NewTaskEvent("B", TaskPriority.HIGH));
 
         assertEquals(2, history.getAll().size());
     }
 
-    public static void returnOnlyEventsFromLastHour() {
+    public static void returnEmptyHistoryWhenNoEvents() {
         EventHistory history = new EventHistory();
 
-        history.add(new NewTaskEvent("Recent Task", TaskPriority.MEDIUM));
+        assertTrue(history.getAll().isEmpty());
+    }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    public static void returnEventsFromLastHourOnly() {
+        EventHistory history = new EventHistory();
 
-        history.add(new NewTaskEvent("Another Recent Task", TaskPriority.HIGH));
+        history.add(new NewTaskEvent("Recent", TaskPriority.MEDIUM));
 
-        assertEquals(2, history.eventsLastHour().size());
+        assertEquals(1, history.eventsLastHour().size());
     }
 }

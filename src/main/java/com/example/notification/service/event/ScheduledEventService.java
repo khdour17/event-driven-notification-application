@@ -20,6 +20,9 @@ public class ScheduledEventService {
 
     public void startScheduledTasks(int intervalSeconds, int times) {
 
+        if (times <= 0){
+            return;
+        }
         System.out.println("Scheduled tasks starting...");
 
         ScheduledExecutorService scheduler =

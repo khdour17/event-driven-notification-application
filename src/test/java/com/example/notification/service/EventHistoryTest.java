@@ -4,18 +4,23 @@ import com.example.notification.helpers.EventHistoryTestHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 class EventHistoryTest {
 
     @Test
-    @DisplayName("Store and retrieve published events")
-    void shouldStoreAndRetrieveEvents() {
-        EventHistoryTestHelper.storeAndRetrieveEvents();
+    @DisplayName("Store events correctly")
+    void storeEventsCorrectly() {
+        EventHistoryTestHelper.storeEventsCorrectly();
+    }
+
+    @Test
+    @DisplayName("Return empty history when no events exist")
+    void returnEmptyHistoryWhenNoEvents() {
+        EventHistoryTestHelper.returnEmptyHistoryWhenNoEvents();
     }
 
     @Test
     @DisplayName("Return only events from the last hour")
-    void shouldReturnOnlyEventsFromLastHour() {
-        EventHistoryTestHelper.returnOnlyEventsFromLastHour();
+    void returnEventsFromLastHourOnly() {
+        EventHistoryTestHelper.returnEventsFromLastHourOnly();
     }
 }
