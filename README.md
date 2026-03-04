@@ -93,14 +93,14 @@ com.example.notification
 │    └── ConsoleMenu
 │
 └── test
-├── helpers
-│    ├── EventBusTestHelper
-│    ├── EventHistoryTestHelper
-│    └── ScheduledEventTestHelper
-└── service
-     ├── EventBusTest
-     ├── EventHistoryTest
-     └── ScheduledEventServiceTest
+     ├── helpers
+     │    ├── EventBusTestHelper
+     │    ├── EventHistoryTestHelper
+     │    └── ScheduledEventTestHelper
+     └── service
+          ├── EventBusTest
+          ├── EventHistoryTest
+          └── ScheduledEventServiceTest
 ```
 
 ---
